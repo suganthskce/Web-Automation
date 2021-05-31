@@ -41,6 +41,7 @@ execute({
 ## Options
 
 | Field | Usage | Values |
+| ------ | ------ | ------ |
 | headless | To open browser headless or not | Boolean |
 | viewport | Viewport Configuration when opening the broswer | Object |
 | viewport.width | Width of the screen that is opened | Number |
