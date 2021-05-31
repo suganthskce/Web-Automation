@@ -15,7 +15,7 @@ const execute = require('web-automation-xml')
 const join = require('path').join;
 const _path = join(__dirname, 'testing.xml');
 
-execute({ 
+execute({
     headless: false,
     viewport: { width: 1200, height: 800 },
     filePath: _path
@@ -81,8 +81,10 @@ This specify the single opeartion that needs to be perforemd.
 | link | Link of the webpage. Used when operationType is goto | String |
 | selector | The Selector of the HTML Element in which operation needs to be performed. | String |
 | waitFor | Time till which the script waits before executing the current operation. Can be millisecond or a Selector | Selector or Number |
+| timeout | Maximim time till which we wait for a Selector. This is used when waitFor is provided as Selector. Defailt value is set to 10000(10s)| Number |
 | fileName | File name with which the captured Screen must be saved. Used in case operationType is capture | String |
-| target | For operationType - click, the window may opens in a new Tab. When we need to focus on newly opened window we need to have target as newWindow | newWindow |
+| target | For operationType - click, the window may opens in a new Tab. When we need to focus on newly opened window we need to have target="newWindow" | String |
 | distance | Distance in px that needs to be scrolled along. Used when operationType is scroll | Number |
 | value | Text that needs to be typed when operationType is type | String |
 | evalue | This must be the key from payload(From Options that discussed above). Dynamic values will be picked from the payload object. | String |
+| ignoreError | If there is a operation that breaks and we do not want to stop the Test case Execution , we set ignoreError="true" | Boolean |

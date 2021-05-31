@@ -38,7 +38,7 @@ const preOpearion = async (operation) => {
 const doOperation = async (operation) => {
     const { payload = {}, screenshotFilePath = '' } = config;
     const { operationType: type = '' } = operation;
-    console.log("operation", operation);
+    // console.log("operation", operation);
     switch (type) {
         case "type": {
             const { value = '', evalue = '', selector = '' } = operation;
@@ -132,7 +132,7 @@ const filterTestCase = (testCases) => {
 const execTestSuite = async (testSuite) => {
     const { TestCases: allTestCases = [] } = testSuite;
     let result = [], index = 0;
-    const { headless = false, viewport = {}, testcases: testcasesToRun = [] } = config;
+    const { headless = false, viewport = {} } = config;
     browser = await puppeteer.launch({ headless });
     let retryCount = 0, testCaseIndex = 0;
     const testCases = filterTestCase(allTestCases);
@@ -142,9 +142,11 @@ const execTestSuite = async (testSuite) => {
         let failed = false;
         let res = {}
         try {
+            console.log("Executing Testcase : ", currentTestCase.id || testCaseIndex);
             page = await browser.newPage();
             page.setViewport(viewport);
             res = await execTestCase(currentTestCase);
+            console.log("Execution completed for Testcase : ", currentTestCase.id || testCaseIndex);
         } catch (e) {
             console.log("Error in Testcase : ", currentTestCase.id || testCaseIndex);
             console.log(e);
@@ -171,7 +173,8 @@ async function execute(json, _config) {
     const cleanJson = doCleanJson(json);
     const { TestSuite = {} } = cleanJson;
     const res = await execTestSuite(TestSuite);
-    console.log("res", res);
+    // console.log("res", res);
+    return res;
 }
 
 module.exports = execute;
