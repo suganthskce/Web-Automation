@@ -88,3 +88,10 @@ This specify the single opeartion that needs to be perforemd.
 | value | Text that needs to be typed when operationType is type | String |
 | evalue | This must be the key from payload(From Options that discussed above). Dynamic values will be picked from the payload object. | String |
 | ignoreError | If there is a operation that breaks and we do not want to stop the Test case Execution , we set ignoreError="true" | Boolean |
+
+
+
+### Support
+
+Features are still in Development. 
+For any Suggestion or Queries, contact suganth2610@gmail.com

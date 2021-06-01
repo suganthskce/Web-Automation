@@ -1,6 +1,6 @@
 {
   "name": "web-automation-xml",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "A XML based Automation Tessting tool for Web",
   "main": "index.js",
   "scripts": {
@@ -21,7 +21,7 @@
   "homepage": "https://github.com/suganthskce/Web-Automation#readme",
   "dependencies": {
     "puppeteer": "9.1.1",
-    "ramda": "^0.27.1",
+    "ramda": "0.27.1",
     "xml2json": "0.12.0"
   }
 }

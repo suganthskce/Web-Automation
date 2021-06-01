@@ -54,9 +54,14 @@ const doOperation = async (operation) => {
         case "scroll": {
             const { selector = '', distance = 100 } = operation;
             if (selector) {
+                // await page.mouse.down();
                 await page.evaluate(({ selector, distance }) => {
                     const scrollableSection = document.querySelector(selector);
+                    // console.log("scrollableSection", distance, scrollableSection);
                     if (scrollableSection) {
+                        // scrollableSection.scrollIntoView();
+                        // scrollableSection.scrollTop = scrollableSection.offsetHeight;
+                        // console.log("scrollableSection.offsetHeight", scrollableSection.offsetHeight);
                         scrollableSection.scrollBy(0, distance);
                     }
                 }, { selector, distance });
@@ -119,6 +124,7 @@ const execTestCase = async (testCase) => {
     let response = [];
     for (let operationIndex in operations) {
         currentOperation = operations[operationIndex];
+        console.log(`[${1 + Number(operationIndex)}] Operation : ${currentOperation.operationType}`);
         response[operationIndex] = await execOpertion(currentOperation);
     }
     return response;
