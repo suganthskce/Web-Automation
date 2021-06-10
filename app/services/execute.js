@@ -38,12 +38,11 @@ const preOpearion = async (operation) => {
 const doOperation = async (operation) => {
     const { payload = {}, screenshotFilePath = '' } = config;
     const { operationType: type = '' } = operation;
-    // console.log("operation", operation);
     switch (type) {
         case "type": {
-            const { value = '', evalue = '', selector = '' } = operation;
+            const { value = '', evalue = '', selector = '', delay = 10 } = operation;
             const finalValue = value ? value : evalue ? eval(evalue) || '' : ''
-            await page.type(selector, finalValue);
+            await page.type(selector, finalValue, { delay });
             break;
         }
         case "goto": {
@@ -54,15 +53,10 @@ const doOperation = async (operation) => {
         case "scroll": {
             const { selector = '', distance = 100 } = operation;
             if (selector) {
-                // await page.mouse.down();
                 await page.evaluate(({ selector, distance }) => {
                     const scrollableSection = document.querySelector(selector);
-                    // console.log("scrollableSection", distance, scrollableSection);
                     if (scrollableSection) {
-                        // scrollableSection.scrollIntoView();
-                        // scrollableSection.scrollTop = scrollableSection.offsetHeight;
-                        // console.log("scrollableSection.offsetHeight", scrollableSection.offsetHeight);
-                        scrollableSection.scrollBy(0, distance);
+                        scrollableSection.scrollTop += parseFloat(distance);
                     }
                 }, { selector, distance });
             } else {
@@ -70,12 +64,16 @@ const doOperation = async (operation) => {
                     window.scrollBy(0, distance);
                 }, distance);
             }
-            // await page.evaluate((selector) => {
-            //     const scrollableSection = document.querySelector(selector);
-            //     if (scrollableSection) {
-            //         scrollableSection.scrollIntoView(true);
-            //     }
-            // }, selector);
+            break;
+        }
+        case "scrollToView": {
+            const { selector = '' } = operation;
+            await page.evaluate((selector) => {
+                const scrollableSection = document.querySelector(selector);
+                if (scrollableSection) {
+                    scrollableSection.scrollIntoView(true);
+                }
+            }, selector);
             break;
         }
         case "capture": {
@@ -144,9 +142,10 @@ const execTestSuite = async (testSuite) => {
     const testCases = filterTestCase(allTestCases);
     while (testCaseIndex < testCases.length) {
         currentTestCase = testCases[testCaseIndex];
-        const { retry = 0 } = currentTestCase;
+        const { id = '', description = '', retry = 0 } = currentTestCase;
+        result[testCaseIndex] = { id, description };
         let failed = false;
-        let res = {}
+        let res = []
         try {
             console.log("Executing Testcase : ", currentTestCase.id || testCaseIndex);
             page = await browser.newPage();
@@ -157,11 +156,10 @@ const execTestSuite = async (testSuite) => {
             console.log("Error in Testcase : ", currentTestCase.id || testCaseIndex);
             console.log(e);
             failed = true;
-            res = { success: false }
         } finally {
             await page.close();
         }
-        result[testCaseIndex] = res;
+        result[testCaseIndex] = { ...result[testCaseIndex], result: res, status: { success: res.length > 0 } };
         if (!(retryCount < retry && failed)) {
             testCaseIndex++;
             retryCount = 0;
@@ -179,12 +177,7 @@ async function execute(json, _config) {
     const cleanJson = doCleanJson(json);
     const { TestSuite = {} } = cleanJson;
     const res = await execTestSuite(TestSuite);
-    // console.log("res", res);
     return res;
 }
 
 module.exports = execute;
-
-
-// Loader in search page
-//#app > div.wrapper.p-R > div > div.search__wrapper > div.hotel__container > div.hotel__search__container > div.searchloader 
